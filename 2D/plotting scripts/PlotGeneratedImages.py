@@ -27,14 +27,15 @@ def main():
     num_imgs_per_axis = corrds_x.shape[0]
 
     corrds = []
-    for x in corrds_x:
+    for x in corrds_x[::-1]:
         for y in corrds_y:
-            corrds.append([x,y])
+            corrds.append([y,x])
 
     embeddings = tf.stack(corrds, axis=0)
 
     imgs = autoencoder.decoder(embeddings)
     imgs = tf.reshape(imgs, shape=(num_imgs_per_axis, num_imgs_per_axis, img_height, img_width, 1))
+    imgs = imgs[:, :, :, :, :]
 
     total_img = np.zeros(shape=(num_imgs_per_axis*img_height,num_imgs_per_axis*img_width, 1), dtype=np.float32)
     
