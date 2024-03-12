@@ -46,43 +46,42 @@ def main():
 
     test_ds = tfds.load("mnist", split="test", as_supervised=True)
 
-    autoencoder = Autoencoder()
-    autoencoder.build(input_shape=(None, 32, 32 ,1))
-    autoencoder.encoder.summary()
-    autoencoder.decoder.summary()
+    for epoch in range(0, 31):
+        autoencoder = Autoencoder()
+        autoencoder.build(input_shape=(None, 32, 32 ,1))
+        autoencoder.encoder.summary()
+        autoencoder.decoder.summary()
 
-    autoencoder.load_weights(f"../saved_models/trained_weights_30").expect_partial()
+        autoencoder.load_weights(f"../saved_models/trained_weights_{epoch}").expect_partial()
 
-    fig = plt.figure(figsize=(12,12))
-    ax = fig.add_subplot(projection='3d')
+        fig = plt.figure(figsize=(12,12))
+        ax = fig.add_subplot(projection='3d')
 
 
-    for digit in range(0, 9 + 1):
-        test_dataset = test_ds.apply(get_pipeline(digit))
+        for digit in range(0, 9 + 1):
+            test_dataset = test_ds.apply(get_pipeline(digit))
 
-        x_coords = []
-        y_coords = []
-        z_coords = []
+            x_coords = []
+            y_coords = []
+            z_coords = []
 
-        for imgs in test_dataset.take(10):
-            embeddings = autoencoder.encoder(imgs)
+            for imgs in test_dataset.take(10):
+                embeddings = autoencoder.encoder(imgs)
 
-            x_coords.append(embeddings[:, 0])
-            y_coords.append(embeddings[:, 1])
-            z_coords.append(embeddings[:, 2])
+                x_coords.append(embeddings[:, 0])
+                y_coords.append(embeddings[:, 1])
+                z_coords.append(embeddings[:, 2])
 
-        
-        ax.scatter(x_coords, y_coords, z_coords, label=digit)
+            
+            ax.scatter(x_coords, y_coords, z_coords, label=digit)
 
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_zlabel("z")
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.set_zlabel("z")
 
-    plt.tight_layout()
-    plt.legend()
-    plt.savefig("../plots/LatentSpace.png", bbox_inches='tight')
-    plt.show()
-
+        plt.tight_layout()
+        plt.legend()
+        plt.savefig(f"../plots/latent space/epoch_{epoch}.png", bbox_inches='tight')
 
 if __name__ == "__main__":
     try:
