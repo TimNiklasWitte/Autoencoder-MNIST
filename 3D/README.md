@@ -2,7 +2,7 @@
 
 ## Latent Space
 
-<img src="./plots/LatentSpace.png" width="500" height="450">
+<img src="./plots/latent space/epoch_30.png" width="500" height="450">
 
 ## Loss
 
