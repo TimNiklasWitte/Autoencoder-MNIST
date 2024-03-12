@@ -42,6 +42,8 @@ def main():
     print(f"Epoch 0")
     log(train_summary_writer, autoencoder, train_dataset, test_dataset, x_tensorboard, epoch=0)
 
+    autoencoder.save_weights(f"./saved_models/trained_weights_{epoch}", save_format="tf")
+    
     #
     # Train loop
     #
