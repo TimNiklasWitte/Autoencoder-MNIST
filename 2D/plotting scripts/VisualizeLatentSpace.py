@@ -46,37 +46,39 @@ def main():
 
     test_ds = tfds.load("mnist", split="test", as_supervised=True)
 
-    autoencoder = Autoencoder()
-    autoencoder.build(input_shape=(None, 32, 32 ,1))
-    autoencoder.encoder.summary()
-    autoencoder.decoder.summary()
+    for epoch in range(0,31):
+        autoencoder = Autoencoder()
+        autoencoder.build(input_shape=(None, 32, 32 ,1))
+        autoencoder.encoder.summary()
+        autoencoder.decoder.summary()
 
-    autoencoder.load_weights(f"../saved_models/trained_weights_30").expect_partial()
+        autoencoder.load_weights(f"../saved_models/trained_weights_{epoch}").expect_partial()
 
-    for digit in range(0, 9 + 1):
-        test_dataset = test_ds.apply(get_pipeline(digit))
+        for digit in range(0, 9 + 1):
+            test_dataset = test_ds.apply(get_pipeline(digit))
 
-        x_coords = []
-        y_coords = []
-  
-        for imgs in test_dataset.take(10):
-            embeddings = autoencoder.encoder(imgs)
+            x_coords = []
+            y_coords = []
+    
+            for imgs in test_dataset.take(10):
+                embeddings = autoencoder.encoder(imgs)
 
-            x_coords.append(embeddings[:, 0])
-            y_coords.append(embeddings[:, 1])
+                x_coords.append(embeddings[:, 0])
+                y_coords.append(embeddings[:, 1])
 
 
-        plt.scatter(x_coords, y_coords, label=digit, s=5)
+            plt.scatter(x_coords, y_coords, label=digit, s=5)
 
-    plt.grid(True)
-    plt.xlabel("x")
-    plt.ylabel("y")
-  
+        plt.grid(True)
+        plt.xlabel("x")
+        plt.ylabel("y")
+    
 
-    plt.tight_layout()
-    plt.legend()
-    plt.savefig("../plots/LatentSpace.png", bbox_inches='tight')
-    plt.show()
+        plt.tight_layout()
+        plt.legend()
+        plt.savefig(f"../plots/latent space/epoch_{epoch}.png", bbox_inches='tight')
+        plt.close()
+
 
 
 if __name__ == "__main__":
