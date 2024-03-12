@@ -1,4 +1,4 @@
-# Visualize MNIST latent space
+# Autoencoder for the MNIST dataset
 
 ## 2D latent space
 
